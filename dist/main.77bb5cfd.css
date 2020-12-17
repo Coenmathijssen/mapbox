@@ -1,0 +1,122 @@
+.mapboxgl-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: #FF9900;
+}
+.mapboxgl-marker .inner {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+}
+
+.mapboxgl-popup {
+  max-width: 200px;
+}
+
+.popup {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  animation: show 0.4s ease-in-out forwards;
+  cursor: pointer;
+}
+.popup .play {
+  width: 12px;
+}
+
+.mapboxgl-popup-content {
+  border-radius: 0;
+  border: none;
+  background: transparent;
+}
+
+@keyframes show {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.circle__box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+}
+
+.circle__wrapper {
+  width: 40px;
+  height: 80px;
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+}
+
+.circle__wrapper--right {
+  right: 0;
+}
+
+.circle__wrapper--left {
+  left: 0;
+}
+
+.circle__whole {
+  width: 68px;
+  height: 68px;
+  border: 6px solid rgba(0, 0, 0, 0.25);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  transform: rotate(-135deg);
+}
+
+.circle__right {
+  border-top: 6px solid #FF9900;
+  border-right: 6px solid #FF9900;
+  right: 1px;
+  animation: circleRight 5s linear forwards;
+}
+
+.circle__left {
+  border-bottom: 6px solid #FF9900;
+  border-left: 6px solid #FF9900;
+  left: 1px;
+  animation: circleLeft 5s linear forwards;
+}
+
+@keyframes circleRight {
+  0% {
+    transform: rotate(-135deg);
+  }
+  50%, 100% {
+    transform: rotate(45deg);
+  }
+}
+@keyframes circleLeft {
+  0%, 50% {
+    transform: rotate(-135deg);
+  }
+  100% {
+    -webkit-transform: rotate(45deg);
+  }
+}
+
+/*# sourceMappingURL=/main.77bb5cfd.css.map */

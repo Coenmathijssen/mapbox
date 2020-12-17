@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Display a map</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/0.0.124/turf.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet">
+<link href="/main.77bb5cfd.css" rel="stylesheet">
+<style>body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }</style>
+<script src="/main.77bb5cfd.js"></script></head>
+<body>
+<div id="map"></div>
+<script>mapboxgl.accessToken = 'pk.eyJ1IjoiY29lbm1hdCIsImEiOiJja2lzb2djNWYwdDhqMnRvYmNwcjZuZ2dhIn0.RVhGR_MZC56vLvzXvvDENw';
+var map = new mapboxgl.Map({
+  container: 'map',
+  zoom: 14.77,
+  center: [127.60597, 35.67283],
+  pitch: 83,
+  style: 'mapbox://styles/mapbox/satellite-v9'
+});
+map.on('load', function () {
+  map.addSource('mapbox-dem', {
+    'type': 'raster-dem',
+    'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+    'tileSize': 512,
+    'maxzoom': 14
+  });
+  map.setTerrain({
+    'source': 'mapbox-dem',
+    'exaggeration': 1.5
+  });
+  map.addLayer({
+    'id': 'sky',
+    'type': 'sky',
+    'paint': {
+      // set up the sky layer to use a color gradient
+      'sky-type': 'gradient',
+      // the sky will be lightest in the center and get darker moving radially outward
+      // this simulates the look of the sun just below the horizon
+      'sky-gradient': ['interpolate', ['linear'], ['sky-radial-progress'], 0.8, 'rgba(135, 206, 235, 1.0)', 1, 'rgba(0,0,0,0.1)'],
+      'sky-gradient-center': [0, 0],
+      'sky-gradient-radius': 90,
+      'sky-opacity': ['interpolate', ['exponential', 0.1], ['zoom'], 5, 0, 22, 1]
+    }
+  });
+}); // let marker = new mapboxgl.Marker()
+// .setLngLat([127.60597, 35.67283])
+// .addTo(map)
+
+var geojson = {
+  type: 'FeatureCollection',
+  features: [{
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [127.61000, 35.67283]
+    },
+    properties: {
+      title: 'Such a pin',
+      description: 'Somewhere in the mountains',
+      image: './video-overlay.ca18cd96.jpg'
+    }
+  }, {
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [127.60597, 35.67283]
+    },
+    properties: {
+      title: 'Such a pin',
+      description: 'We are in China',
+      image: './video-overlay.ca18cd96.jpg'
+    }
+  }, {
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [127.60000, 35.66983]
+    },
+    properties: {
+      title: 'Such a pin',
+      description: 'We are in China',
+      image: './video-overlay.ca18cd96.jpg'
+    }
+  }]
+}; // add markers to map
+
+geojson.features.forEach(function (marker) {
+  // create a HTML element for each feature
+  var el = document.createElement('div');
+  el.className = 'marker';
+  var inner = document.createElement('div');
+  inner.className = 'inner';
+  el.appendChild(inner); // make a marker for each feature and add to the map
+
+  new mapboxgl.Marker(el).setLngLat(marker.geometry.coordinates).setPopup(new mapboxgl.Popup({
+    anchor: 'center',
+    closeButton: false
+  }) // add popups
+  .setHTML("<div class=\"popup\" style=\"background-image: url('".concat(marker.properties.image, "')\">\n      <svg class=\"play\" width=\"16\" height=\"20\" viewBox=\"0 0 16 20\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M1 10V1.91711L8 5.95858L15 10L8 14.0415L1 18.083V10Z\" fill=\"white\" stroke=\"white\" stroke-width=\"2\" stroke-linejoin=\"round\"/>\n      </svg>\n      <div class=\"circle__box\">\n        <div class=\"circle__wrapper circle__wrapper--right\">\n          <div class=\"circle__whole circle__right\"></div>\n        </div>\n        <div class=\"circle__wrapper circle__wrapper--left\">\n          <div class=\"circle__whole circle__left\"></div>\n        </div>\n      </div>"))).addTo(map);
+});
+var polyline = mapboxgl.polyline([]).addTo(map); // add a variable for keeping track of points
+
+var y = 0; // Start drawing the polyline.
+
+add();
+
+function add() {
+  // add a point on the line for the new marker
+  polyline.addLatLng(L.latLng(geojson[y].geometry.coordinates[1], geojson[y].geometry.coordinates[0])); // Pan the map along with where the line is being added.
+
+  map.setView(geojson[y].geometry.coordinates, 3); // Continue to draw and pan the map by calling `add()`
+  // until `y` reaches the number of geojson
+
+  if (++y < geojson.length) window.setTimeout(add, 1000);
+}</script>
+ 
+</body>
+</html>
